@@ -28,7 +28,7 @@ app.use(express.static('.'));
 // 👆
 
 // ---------------- DATABASE CONNECTION ----------------
-const dbUri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/advocateApp';
+const dbUri = process.env.MONGO_URI;
 
 mongoose.connect(dbUri)
     .then(() => console.log("✅ MongoDB Connected Successfully"))
@@ -170,3 +170,4 @@ app.delete('/api/bookings/:id', async (req, res) => {
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Server running on Port: ${PORT}`);
 });
+
