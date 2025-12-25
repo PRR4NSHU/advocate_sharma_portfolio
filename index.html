@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advocate Portfolio & Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav>
+        <div class="container nav-content">
+            <div class="logo">Advocate Sharma</div>
+            <ul class="nav-links">
+                <li><a onclick="navigateTo('home')">Home</a></li>
+                <li><a onclick="navigateTo('about')">About</a></li>
+                <li><a onclick="navigateTo('appointment')">Book Now</a></li>
+                <li><a onclick="navigateTo('contact')">Contact</a></li>
+                
+                <li><a onclick="showScene('status-page')">Status</a></li>
+                <li><a onclick="showLoginModal()" class="admin-link"><i class="fas fa-lock"></i> Admin</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div id="main-page">
+        
+        <section id="home" class="hero">
+            <h1>Legal Excellence & Integrity</h1>
+            <p>Providing expert legal counsel in Civil, Criminal, and Corporate matters.</p>
+            <button onclick="navigateTo('appointment')" class="btn btn-gold" style="width: auto;">Book Consultation</button>
+        </section>
+
+        <section id="about">
+            <div class="container">
+                <div class="section-title"><h2>About The Advocate</h2></div>
+                <div class="about-content">
+                    <div class="about-img"></div>
+                    <div class="about-text">
+                        <h3 style="color: var(--primary); margin-bottom: 15px;">Chandra Bhan Sharma</h3>
+                        <p style="margin-bottom: 15px;">
+                            Dedicated to upholding justice, I have served the Aligarh District and Sessions Court with unwavering commitment. My practice is built on transparency, strategic planning, and result-oriented legal solutions.
+                        </p>
+                        <p>
+                            Whether it's a complex civil dispute or a critical criminal defense, I ensure my clients understand every step of the legal journey.
+                        </p>
+                        <ul class="stats-list">
+                            <li><i class="fas fa-check-circle" style="color: var(--gold);"></i> 500+ Cases Handled</li>
+                            <li><i class="fas fa-check-circle" style="color: var(--gold);"></i> High Success Rate</li>
+                            <li><i class="fas fa-check-circle" style="color: var(--gold);"></i> 24/7 Legal Support</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="appointment">
+            <div class="container">
+                <div class="section-title"><h2>Book an Appointment</h2></div>
+                <div class="card">
+                    <form onsubmit="goToPaymentPage(event)">
+                        <div class="form-group"><label>Full Name</label><input type="text" id="cName" required placeholder="Ex: Rahul Kumar"></div>
+                        <div class="form-group"><label>Mobile Number</label><input type="tel" id="cPhone" required pattern="[0-9]{10}" placeholder="10-digit number"></div>
+                        <div class="form-group">
+                            <label>Service Type</label>
+                            <select id="cService" required>
+                                <option value="1500">General Consultation (₹1,500)</option>
+                                <option value="3000">Legal Notice Drafting (₹3,000)</option>
+                                <option value="5000">Bail Consultation (₹5,000)</option>
+                            </select>
+                        </div>
+                        <div class="form-group"><label>Preferred Date</label><input type="date" id="cDate" required></div>
+                        <button type="submit" class="btn btn-gold">Proceed to Payment</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact">
+            <div class="container">
+                <div class="section-title"><h2>Contact Us</h2></div>
+                <div class="contact-grid">
+                    <div class="contact-card">
+                        <i class="fas fa-phone-volume"></i>
+                        <h3>Call Us</h3>
+                        <p>Mon-Sat, <br>10:30 am - 5:30 pm</p>
+                        <a href="tel:917535933300">+91 7535933300</a>
+                    </div>
+                    <div class="contact-card">
+                        <i class="fas fa-envelope"></i>
+                        <h3>Email Us</h3>
+                        <p>For inquiries & docs</p>
+                        <a href="mailto:advocatealg.associate@gmail.com">advocatealg.associate@gmail.com</a>
+                    </div>
+                    <div class="contact-card">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <h3>Visit Office</h3>
+                        <p>Gate No. 01, Chamber 43, <br>District and Sessions Court</p>
+                        <p style="font-weight: bold; color: var(--gold);">Aligarh, Uttar Pradesh</p>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 50px; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); height: 350px; background: #ddd; display: flex; align-items: center; justify-content: center;">
+                    <iframe src="https://www.google.com/maps?q=District+Court+Aligarh&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+        </section>
+
+    </div> 
+    
+    <div id="payment-page" class="hidden">
+        <div class="hero" style="height: 100vh; background: #08263a;">
+            <div class="card">
+                <h3>Secure Payment</h3>
+                <div style="background: var(--bg-body); padding: 15px; margin: 20px 0; border-radius: 8px; text-align: left;">
+                    <p><strong>Name:</strong> <span id="payName"></span></p>
+                    <p><strong>Fee:</strong> <span id="payAmount" style="font-weight:bold; color:var(--gold);"></span></p>
+                </div>
+                <p style=" font-size:0.8rem; margin-bottom:15px;">Mr. Chandra Bhan Sharma</p>
+                
+                <img id="dynamicQR" src="" alt="QR" style="width: 150px; margin-bottom: 5px;">
+                <p style="font-size:0.8rem; margin-bottom:15px;">Scan to Pay</p>
+
+                <button type="button" onclick="payViaApp('phonepe')" class="btn btn-phonepe">
+                    <i class="fas fa-wallet"></i> Pay via PhonePe
+                </button>
+
+                <button type="button" onclick="payViaApp('paytm')" class="btn btn-paytm">
+                    <i class="fas fa-wallet"></i> Pay via Paytm
+                </button>
+
+                <button type="button" onclick="payWithUPI()" class="btn btn-upi">
+                    <i class="fas fa-mobile-alt"></i> Other UPI Apps
+                </button>
+                
+                <div class="form-group">
+                    <input type="text" id="txnId" placeholder="Enter UPI Ref / UTR Number">
+                </div>
+                <button onclick="confirmBooking()" class="btn btn-gold" style="background: var(--success);">Confirm Payment</button>
+                <button onclick="showScene('main-page')" class="btn btn-outline">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="success-page" class="hidden">
+        <div class="hero" style="height: 100vh; background: var(--bg-body);">
+            <div class="card" style="text-align: center;">
+                <i class="fas fa-check-circle" style="font-size: 4rem; color: var(--success); margin-bottom: 15px;"></i>
+                <h2>Booking Sent!</h2>
+                <p>Data saved to Database.</p>
+                <div style="background: rgba(34, 197, 94, 0.1); padding: 15px; margin: 20px 0; border: 1px dashed var(--success); border-radius: 8px;">
+                    <h3>Ref ID: <span id="outRef" style="color:var(--text-main);"></span></h3>
+                </div>
+                <button onclick="showScene('status-page')" class="btn btn-gold">Track Status</button>
+                <button onclick="showScene('main-page')" class="btn btn-outline">Home</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="status-page" class="hidden">
+        <div class="container" style="padding-top: 40px;">
+            <div class="section-title"><h2>Check Appointment Status</h2></div>
+            <div class="card">
+                <div class="form-group">
+                    <label>Enter Reference ID (e.g. #123456)</label>
+                    <input type="text" id="searchRef" placeholder="#123456">
+                </div>
+                <button onclick="checkStatus()" class="btn btn-gold">Search Database</button>
+                
+                <div id="statusResult" class="hidden" style="margin-top: 20px; padding: 15px; background: var(--bg-body); border: 1px dashed var(--border-color); border-radius:8px;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="admin-page" class="hidden">
+        <div class="container" style="padding-top: 20px;">
+            <div class="dashboard-header">
+                <h2 style="color: var(--primary);">Admin Dashboard</h2>
+                <button onclick="logoutAdmin()" class="btn btn-outline" style="width: auto;">Logout</button>
+            </div>
+            
+            <div class="table-container">
+                <table id="bookingTable">
+                    <thead>
+                        <tr>
+                            <th>Ref ID</th>
+                            <th>Date</th>
+                            <th>Client Info</th>
+                            <th>Service & Txn</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="login-modal" class="hidden login-overlay">
+        <div class="card" style="margin: 0; width: 350px;">
+            <h3 style="text-align: center; margin-bottom: 20px;">Admin Login</h3>
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="adminUser" placeholder="admin">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="adminPass" placeholder="password">
+            </div>
+            <button onclick="loginAdmin()" class="btn btn-gold">Login</button>
+            
+            <p onclick="showRecoveryModal()" style="text-align:right; font-size:0.8rem; color:var(--text-muted); cursor:pointer; margin-top:10px; text-decoration: underline;">
+                Forgot Password?
+            </p>
+            
+            <button onclick="closeModals()" class="btn btn-outline">Close</button>
+        </div>
+    </div>
+
+    <div id="recovery-modal" class="hidden login-overlay">
+        <div class="card" style="margin: 0; width: 350px;">
+            <h3 style="text-align: center; margin-bottom: 20px;">Reset Password</h3>
+            <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">Verify details to reset your password.</p>
+            
+            <div class="form-group">
+                <input type="text" id="recUser" placeholder="Username">
+            </div>
+            <div class="form-group">
+                <input type="email" id="recEmail" placeholder="Registered Email">
+            </div>
+            <div class="form-group">
+                <label>Security Question: What is your pet's name?</label>
+                <input type="text" id="recAns" placeholder="Answer ">
+            </div>
+            <hr style="margin: 15px 0; border: 0; border-top: 1px solid var(--border-color);">
+            <div class="form-group">
+                <input type="password" id="newPass" placeholder="New Password">
+            </div>
+            
+            <button onclick="performReset()" class="btn btn-gold">Reset Password</button>
+            <button onclick="showLoginModal()" class="btn btn-outline">Back to Login</button>
+        </div>
+    </div>
+
+    <button class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
+        <i class="fas fa-moon" id="themeIcon"></i>
+    </button>
+
+    <footer>
+        <div class="container">
+            <p>© 2024 Advocate Sharma & Associates. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
