@@ -1,14 +1,17 @@
 // ---------------- CONFIGURATION ----------------
-require('dotenv').config();
+import dotenv from 'dotenv';
+dotenv.config();
 
-// ---------------- IMPORTS (Converted to Require) ----------------
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-const bcrypt = require('bcryptjs');
+// ---------------- IMPORTS ----------------
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import bodyParser from 'body-parser';
+import bcrypt from 'bcryptjs';
 
-// Note: 'open' library hata di gayi hai taaki Render par error na aaye.
+// 👇 1. YAHAN NEW IMPORT HAI (Browser kholne ke liye)
+import open from 'open'; 
+// 👆
 
 // ---------------- APP INIT ----------------
 const app = express();
@@ -23,47 +26,20 @@ app.use(cors({
 
 app.use(bodyParser.json());
 
-// HTML/CSS serve karne ke liye (Zaroori hai)
+// 👇 2. YAHAN CHANGE HAI (Ye aapke HTML/CSS ko server par dikhayega)
+// '.' ka matlab hai ki current folder ki files (index.html) ko serve karo
 app.use(express.static('.'));
+// 👆
 
 // ---------------- DATABASE CONNECTION ----------------
-const dbUri = process.env.MONGO_URI;
+const dbUri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/advocateApp';
 
 mongoose.connect(dbUri)
     .then(() => console.log("✅ MongoDB Connected Successfully"))
     .catch(err => {
         console.error("❌ MongoDB Connection Error:", err);
-        // Live server par crash na ho isliye process.exit hata diya hai temporary retry ke liye
-        console.log("Check your MongoDB Atlas connection string.");
+        process.exit(1);
     });
-// 3. Create Booking (DEBUG VERSION)
-app.post('/api/bookings', async (req, res) => {
-    console.log("📩 Request Received:", req.body); // Logs mein data dikhayega
-
-    try {
-        const { refId, name, phone, service, date } = req.body;
-        
-        // Validation Check
-        if (!refId || !name || !phone || !service || !date) {
-            console.log("❌ Missing Fields");
-            return res.status(400).json({ error: "All fields are required" });
-        }
-
-        // DB Connection Check
-        if (mongoose.connection.readyState !== 1) {
-            console.log("❌ Database not connected");
-            return res.status(500).json({ error: "Database not connected" });
-        }
-
-        const newBooking = await Booking.create(req.body);
-        console.log("✅ Data Saved:", newBooking);
-        res.status(201).json({ message: "Booking Saved Successfully" });
-
-    } catch (err) {
-        console.error("🔥 ACTUAL ERROR:", err); // Ye asli error print karega
-        res.status(500).json({ error: "Failed to save booking", details: err.message });
-    }
-});
 
 // ---------------- SCHEMAS ----------------
 const BookingSchema = new mongoose.Schema({
@@ -182,8 +158,16 @@ app.delete('/api/bookings/:id', async (req, res) => {
 });
 
 // ---------------- START SERVER ----------------
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 Server running on Port: ${PORT}`);
+app.listen(PORT, '0.0.0.0', async () => {
+    const url = `http://localhost:${PORT}`;
+    console.log(`🚀 Server running on ${url}`);
+    
+    // 👇 3. YAHAN CHANGE HAI (Server start hote hi URL open karega)
+    try {
+        await open(url); 
+        console.log(`🌐 Website opened automatically in browser.`);
+    } catch (err) {
+        console.log("Could not open browser automatically.");
+    }
+    // 👆
 });
-
-
