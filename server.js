@@ -36,6 +36,34 @@ mongoose.connect(dbUri)
         // Live server par crash na ho isliye process.exit hata diya hai temporary retry ke liye
         console.log("Check your MongoDB Atlas connection string.");
     });
+// 3. Create Booking (DEBUG VERSION)
+app.post('/api/bookings', async (req, res) => {
+    console.log("📩 Request Received:", req.body); // Logs mein data dikhayega
+
+    try {
+        const { refId, name, phone, service, date } = req.body;
+        
+        // Validation Check
+        if (!refId || !name || !phone || !service || !date) {
+            console.log("❌ Missing Fields");
+            return res.status(400).json({ error: "All fields are required" });
+        }
+
+        // DB Connection Check
+        if (mongoose.connection.readyState !== 1) {
+            console.log("❌ Database not connected");
+            return res.status(500).json({ error: "Database not connected" });
+        }
+
+        const newBooking = await Booking.create(req.body);
+        console.log("✅ Data Saved:", newBooking);
+        res.status(201).json({ message: "Booking Saved Successfully" });
+
+    } catch (err) {
+        console.error("🔥 ACTUAL ERROR:", err); // Ye asli error print karega
+        res.status(500).json({ error: "Failed to save booking", details: err.message });
+    }
+});
 
 // ---------------- SCHEMAS ----------------
 const BookingSchema = new mongoose.Schema({
@@ -157,4 +185,5 @@ app.delete('/api/bookings/:id', async (req, res) => {
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Server running on Port: ${PORT}`);
 });
+
 
