@@ -138,8 +138,9 @@ async function confirmBooking() {
         if (response.ok) {
             document.getElementById('outRef').innerText = refId;
             showScene('success-page');
-            const msg = `*New Booking*\nName: ${finalData.name}\nRef: ${refId}\nTxn: ${txnId}`;
-            window.open(`https://wa.me/${ADVOCATE_PHONE}?text=${encodeURIComponent(msg)}`, '_blank');
+            
+            // ❌ Whatsapp Message wala code yahan se hata diya gaya hai.
+            
         } else {
             alert("Server Error: Could not save booking.");
         }
@@ -278,7 +279,4 @@ async function updateStatus(id, newStatus) {
 
 function logoutAdmin() {
     showScene('main-page');
-
 }
-
-
