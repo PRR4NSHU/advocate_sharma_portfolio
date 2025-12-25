@@ -1,17 +1,14 @@
 // ---------------- CONFIGURATION ----------------
-import dotenv from 'dotenv';
-dotenv.config();
+require('dotenv').config();
 
-// ---------------- IMPORTS ----------------
-import express from 'express';
-import mongoose from 'mongoose';
-import cors from 'cors';
-import bodyParser from 'body-parser';
-import bcrypt from 'bcryptjs';
+// ---------------- IMPORTS (Converted to Require for Stability) ----------------
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const bcrypt = require('bcryptjs');
 
-// 👇 1. YAHAN NEW IMPORT HAI (Browser kholne ke liye)
-import open from 'open'; 
-// 👆
+// Note: 'open' library hata di gayi hai kyunki wo Live Server par crash karti hai.
 
 // ---------------- APP INIT ----------------
 const app = express();
@@ -26,8 +23,7 @@ app.use(cors({
 
 app.use(bodyParser.json());
 
-// 👇 2. YAHAN CHANGE HAI (Ye aapke HTML/CSS ko server par dikhayega)
-// '.' ka matlab hai ki current folder ki files (index.html) ko serve karo
+// 👇 Ye Line Zaroori hai: HTML/CSS ko server par dikhane ke liye
 app.use(express.static('.'));
 // 👆
 
@@ -38,7 +34,7 @@ mongoose.connect(dbUri)
     .then(() => console.log("✅ MongoDB Connected Successfully"))
     .catch(err => {
         console.error("❌ MongoDB Connection Error:", err);
-        process.exit(1);
+        console.log("Check Render Environment Variables for MONGO_URI");
     });
 
 // ---------------- SCHEMAS ----------------
@@ -97,11 +93,24 @@ seedAdmin();
 
 app.post('/api/bookings', async (req, res) => {
     try {
+        // DB Connection Check for Debugging
+        if (mongoose.connection.readyState !== 1) {
+            console.log("❌ DB Not Connected when saving booking");
+            return res.status(500).json({ error: "Database not connected" });
+        }
+
         const { refId, name, phone, service, date } = req.body;
-        if (!refId || !name || !phone || !service || !date) return res.status(400).json({ error: "All fields required" });
+        if (!refId || !name || !phone || !service || !date) {
+            return res.status(400).json({ error: "All fields required" });
+        }
+
         await Booking.create(req.body);
+        console.log("✅ Booking Saved:", refId);
         res.status(201).json({ message: "Booking Saved Successfully" });
-    } catch (err) { res.status(500).json({ error: "Failed to save booking" }); }
+    } catch (err) { 
+        console.error("🔥 Save Error:", err);
+        res.status(500).json({ error: "Failed to save booking", details: err.message }); 
+    }
 });
 
 app.get('/api/status/:refId', async (req, res) => {
@@ -158,16 +167,6 @@ app.delete('/api/bookings/:id', async (req, res) => {
 });
 
 // ---------------- START SERVER ----------------
-app.listen(PORT, '0.0.0.0', async () => {
-    const url = `http://localhost:${PORT}`;
-    console.log(`🚀 Server running on ${url}`);
-    
-    // 👇 3. YAHAN CHANGE HAI (Server start hote hi URL open karega)
-    try {
-        await open(url); 
-        console.log(`🌐 Website opened automatically in browser.`);
-    } catch (err) {
-        console.log("Could not open browser automatically.");
-    }
-    // 👆
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 Server running on Port: ${PORT}`);
 });
