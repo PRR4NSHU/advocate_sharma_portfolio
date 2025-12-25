@@ -1,7 +1,7 @@
 // --- CONFIGURATION ---
 const ADVOCATE_PHONE = "917535933300"; 
 const UPI_ID = "advocatealg.associate@okhdfcbank";
-const API_URL = "http://192.168.31.118:5000/api";
+const API_URL = "https://advocate-sharma-portfolio.onrender.com";
 
 let currentBooking = {};
 
@@ -278,4 +278,5 @@ async function updateStatus(id, newStatus) {
 
 function logoutAdmin() {
     showScene('main-page');
+
 }
