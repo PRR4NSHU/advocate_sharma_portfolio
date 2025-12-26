@@ -1,7 +1,8 @@
 // --- CONFIGURATION ---
 const ADVOCATE_PHONE = "917535933300"; 
 const UPI_ID = "advocatealg.associate@okhdfcbank";
-const API_URL = "https://advocate-sharma-portfolio.onrender.com/api";
+// Ensure API URL has /api at the end
+const API_URL = "https://advocate-sharma-portfolio.onrender.com/api"; 
 
 let currentBooking = {};
 
@@ -123,9 +124,25 @@ function payWithUPI() {
     window.location.href = url;   
 }
 
+// 👇👇👇 UPDATED FUNCTION IS HERE 👇👇👇
 async function confirmBooking() {
+    // 1. Get Value and remove spaces
+    const txnInput = document.getElementById('txnId');
+    const txnId = txnInput.value.trim();
+
+    // 2. CHECK: Agar khali hai to rok do
+    if (!txnId) {
+        alert("⚠️ Payment Verification Required!\n\nPlease enter the UPI Reference Number / UTR Number to confirm your booking.");
+        txnInput.focus(); // Cursor wapas box me laye
+        txnInput.style.borderColor = "red"; // Box ko red kar dein taaki dikhe
+        return; // STOP EXECUTION HERE
+    }
+
+    // Reset style if valid
+    txnInput.style.borderColor = "#cbd5e1";
+
+    // 3. Proceed only if Txn ID exists
     const refId = "#" + Math.floor(100000 + Math.random() * 900000);
-    const txnId = document.getElementById('txnId').value || "N/A";
     const finalData = { ...currentBooking, refId, txnId };
 
     try {
@@ -138,9 +155,6 @@ async function confirmBooking() {
         if (response.ok) {
             document.getElementById('outRef').innerText = refId;
             showScene('success-page');
-            
-            // ❌ Whatsapp Message wala code yahan se hata diya gaya hai.
-            
         } else {
             alert("Server Error: Could not save booking.");
         }
@@ -148,6 +162,7 @@ async function confirmBooking() {
         alert("Connection Error: Is the backend server running?");
     }
 }
+// 👆👆👆 UPDATED FUNCTION END 👆👆👆
 
 // --- 2. CLIENT STATUS CHECK ---
 async function checkStatus() {
@@ -280,4 +295,3 @@ async function updateStatus(id, newStatus) {
 function logoutAdmin() {
     showScene('main-page');
 }
-
