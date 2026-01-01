@@ -14,11 +14,11 @@ const bcrypt = require('bcryptjs');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Backend API Route
+// Config Route to send .env variables to frontend
 app.get('/api/config', (req, res) => {
     res.json({
-        upiId: process.env.ADVOCATE_UPI_ID,
-        phone: process.env.ADVOCATE_PHONE
+        UPI_ID: process.env.UPI_ID,          // Variable name same rakha hai
+        ADVOCATE_PHONE: process.env.ADVOCATE_PHONE
     });
 });
 
@@ -178,5 +178,6 @@ app.delete('/api/bookings/:id', async (req, res) => {
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Server running on Port: ${PORT}`);
 });
+
 
 
