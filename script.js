@@ -1,8 +1,8 @@
 // --- CONFIGURATION ---
 let ADVOCATE_PHONE = ""; 
-let UPI_ID = ""; 
+let UPI_ID = ""; // Variable name same hai (Pehle const tha, ab let hai)
 
-// API URL wahi rahega
+// API URL
 const API_URL = "https://advocate-sharma-portfolio.onrender.com/api"; 
 
 let currentBooking = {};
@@ -10,23 +10,26 @@ let currentBooking = {};
 // 👇👇👇 NEW FUNCTION: FETCH CONFIG FROM SERVER 👇👇👇
 async function loadConfiguration() {
     try {
-        // Backend se secure data mangwana
+        // Backend se data mangwana
         const response = await fetch(`${API_URL}/config`);
+        
         if (response.ok) {
             const data = await response.json();
             
-            // Variables update kar rahe hain
-            UPI_ID = data.upiId;
-            ADVOCATE_PHONE = data.phone;
+            // Backend se jo 'UPI_ID' aaya hai, usse frontend wale 'UPI_ID' me daal rahe hain
+            if (data.UPI_ID) UPI_ID = data.UPI_ID; 
+            if (data.ADVOCATE_PHONE) ADVOCATE_PHONE = data.ADVOCATE_PHONE;
             
-            console.log("Payment Details Loaded Successfully");
+            console.log("Payment Details Loaded. UPI ID:", UPI_ID);
         } else {
             console.error("Failed to load config");
-            // Fallback agar server fail ho jaye (Optional)
+            // Fallback (Agar server fail ho jaye)
             UPI_ID = "advocatealg.associate@okhdfcbank"; 
         }
     } catch (error) {
         console.error("Error connecting to server for config:", error);
+        // Fallback on error
+        UPI_ID = "advocatealg.associate@okhdfcbank";
     }
 }
 // 👆👆👆 END NEW FUNCTION 👆👆👆
@@ -58,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
         icon.className = 'fas fa-sun';
     }
 
-    // 2. Load UPI Details from Backend (NEW CALL)
+    // 2. Load UPI Details from Backend (Isse call karna zaroori hai)
     loadConfiguration();
 });
 
@@ -325,4 +328,5 @@ async function updateStatus(id, newStatus) {
 function logoutAdmin() {
     showScene('main-page');
 }
+
 
