@@ -1,10 +1,36 @@
 // --- CONFIGURATION ---
-const ADVOCATE_PHONE = "917535933300"; 
-const UPI_ID = "advocatealg.associate@okhdfcbank";
-// Ensure API URL has /api at the end
+let ADVOCATE_PHONE = ""; 
+let UPI_ID = ""; 
+
+// API URL wahi rahega
 const API_URL = "https://advocate-sharma-portfolio.onrender.com/api"; 
 
 let currentBooking = {};
+
+// 👇👇👇 NEW FUNCTION: FETCH CONFIG FROM SERVER 👇👇👇
+async function loadConfiguration() {
+    try {
+        // Backend se secure data mangwana
+        const response = await fetch(`${API_URL}/config`);
+        if (response.ok) {
+            const data = await response.json();
+            
+            // Variables update kar rahe hain
+            UPI_ID = data.upiId;
+            ADVOCATE_PHONE = data.phone;
+            
+            console.log("Payment Details Loaded Successfully");
+        } else {
+            console.error("Failed to load config");
+            // Fallback agar server fail ho jaye (Optional)
+            UPI_ID = "advocatealg.associate@okhdfcbank"; 
+        }
+    } catch (error) {
+        console.error("Error connecting to server for config:", error);
+    }
+}
+// 👆👆👆 END NEW FUNCTION 👆👆👆
+
 
 // --- THEME TOGGLE LOGIC ---
 function toggleTheme() {
@@ -22,14 +48,18 @@ function toggleTheme() {
     }
 }
 
-// Initialize Theme from LocalStorage
+// Initialize Theme AND Config from LocalStorage
 document.addEventListener('DOMContentLoaded', () => {
+    // 1. Theme Load
     const savedTheme = localStorage.getItem('theme');
     const icon = document.getElementById('themeIcon');
     if (savedTheme === 'dark') {
         document.documentElement.setAttribute('data-theme', 'dark');
         icon.className = 'fas fa-sun';
     }
+
+    // 2. Load UPI Details from Backend (NEW CALL)
+    loadConfiguration();
 });
 
 // --- NAVIGATION LOGIC ---
@@ -295,3 +325,4 @@ async function updateStatus(id, newStatus) {
 function logoutAdmin() {
     showScene('main-page');
 }
+
