@@ -14,6 +14,14 @@ const bcrypt = require('bcryptjs');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Backend API Route
+app.get('/api/config', (req, res) => {
+    res.json({
+        upiId: process.env.ADVOCATE_UPI_ID,
+        phone: process.env.ADVOCATE_PHONE
+    });
+});
+
 // ---------------- MIDDLEWARE ----------------
 app.use(cors({
     origin: '*', 
@@ -170,4 +178,5 @@ app.delete('/api/bookings/:id', async (req, res) => {
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Server running on Port: ${PORT}`);
 });
+
 
